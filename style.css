@@ -1,0 +1,251 @@
+/* Core Styling reset with Dark/Neon Premium Aesthetics */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #f8fafc;
+    padding: 20px;
+}
+
+.todo-container {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    border-radius: 24px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 25px;
+    background: linear-gradient(to right, #60a5fa, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+}
+
+form {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+#todo-inp {
+    flex: 1;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 14px 20px;
+    border-radius: 14px;
+    color: #fff;
+    font-size: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#todo-inp:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+    background: rgba(15, 23, 42, 0.8);
+}
+
+.add-btn {
+    background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+    border: none;
+    color: white;
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+}
+
+/* Tasks Items Styling */
+#show-todo {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    perspective: 800px;
+}
+
+li {
+    background: rgba(51, 65, 85, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 14px 18px;
+    border-radius: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: right center;
+}
+
+.todo-text {
+    font-size: 1rem;
+    color: #e2e8f0;
+    max-width: 65%;
+    word-break: break-word;
+    transition: all 0.4s ease;
+}
+
+/* Premium Trash/Delete Button Logic */
+.delete-btn {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: #f87171;
+    padding: 10px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    width: 95px; /* Initial Fixed Width */
+}
+
+.delete-btn:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.4);
+    transform: translateY(-1px);
+}
+
+/* Custom CSS Trash Icon drawing */
+.trash-bin {
+    width: 14px;
+    height: 16px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.trash-lid {
+    width: 14px;
+    height: 3px;
+    background-color: currentColor;
+    border-radius: 2px;
+    position: relative;
+    transition: transform 0.3s ease;
+    transform-origin: left center;
+}
+
+.trash-lid::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 4px;
+    width: 6px;
+    height: 2px;
+    background-color: currentColor;
+    border-radius: 1px;
+}
+
+.trash-box {
+    width: 12px;
+    height: 12px;
+    margin: 0 auto;
+    background-color: transparent;
+    border: 2px solid currentColor;
+    border-top: none;
+    border-radius: 0 0 2px 2px;
+    position: relative;
+}
+
+/* Step 1 Animation Trigger: Button Widen & Lid Opens */
+.delete-btn.deleting {
+    width: 120px; /* Width increases */
+    background: #ef4444 !important;
+    color: #fff !important;
+    border-color: #ef4444 !important;
+}
+
+.delete-btn.deleting .trash-lid {
+    transform: rotate(-50deg) translateY(-2px); /* Lid Opens Up */
+}
+
+/* Step 2 Animation Trigger: Text shrinks & drops inside button container direction */
+li.fall-in .todo-text {
+    transform: scale(0.1) translate(300px, 0);
+    opacity: 0;
+}
+
+/* Final Lid Snap Close and item vanishing */
+li.fall-in {
+    opacity: 0.3;
+    transform: scaleY(0);
+    padding: 0;
+    margin: -7px 0;
+    border: none;
+}
+
+li.fall-in .delete-btn .trash-lid {
+    transform: rotate(0deg); /* Lid closes right back up tight */
+    transition: transform 0.15s ease-in;
+}
+
+li.fall-in .delete-btn {
+    width: 95px; /* Returns back to normal scale */
+    transition: width 0.2s ease-in;
+}
+
+/* Premium Spinner Elements for data loading state */
+.loading-container {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+}
+
+.spinner {
+    animation: rotate 2s linear infinite;
+    width: 30px;
+    height: 30px;
+}
+
+.spinner .path {
+    stroke: #6366f1;
+    stroke-linecap: round;
+    animation: dash 1.5s ease-in-out infinite;
+}
+
+.empty-state {
+    text-align: center;
+    color: #64748b;
+    font-size: 0.95rem;
+    padding: 20px 0;
+}
+
+@keyframes rotate {
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes dash {
+    0% { stroke-dasharray: 1, 150; stroke-dashoffset: 0; }
+    50% { stroke-dasharray: 90, 150; stroke-dashoffset: -35; }
+    100% { stroke-dasharray: 90, 150; stroke-dashoffset: -124; }
+}
