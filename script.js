@@ -2,11 +2,16 @@
 
 // https://teudfbwszffmqcmcjaed.supabase.co
 // sb_publishable_ZiqkTUexIbUZZTE0z9JW8Q_tSj0Zsc4
-const createClient=supabase.createClient("https://supabase.co","sb_publishable_ZiqkTUexIbUZZTE0z9JW8Q_tSj0Zsc4")
+const createClient=supabase.createClient("https://teudfbwszffmqcmcjaed.supabase.co","sb_publishable_ZiqkTUexIbUZZTE0z9JW8Q_tSj0Zsc4")
 const todoInp=document.querySelector("#todo-inp")
 const show=document.querySelector("#show-todo")
 const getData=async ()=>{
-    show.innerHTML=`<img src="https://wikimedia.org style="width: 10px; height: 10px;">`
+    show.innerHTML = `
+    <div class="loading-container">
+        <div class="premium-loader"></div>
+        <span>Loading your tasks...</span>
+    </div>
+`;
      const response=await createClient.from("todos").select("*")
      const todosData=response.data
      show.innerHTML = "";

@@ -1,251 +1,533 @@
-/* Core Styling reset with Dark/Neon Premium Aesthetics */
+/* Premium Todo App — Animated UI */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --bg: #080b16;
+    --panel: rgba(20, 25, 46, 0.82);
+    --border: rgba(255, 255, 255, 0.09);
+    --text: #f4f5ff;
+    --muted: #969db8;
+    --purple: #9b87ff;
+    --pink: #ff79c6;
+    --red: #ff6178;
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 
 body {
-    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
     min-height: 100vh;
+    padding: 48px 20px;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    color: #f8fafc;
-    padding: 20px;
-}
-
-.todo-container {
-    background: rgba(30, 41, 59, 0.7);
-    backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 30px;
-    border-radius: 24px;
-    width: 100%;
-    max-width: 500px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    color: var(--text);
+    background:
+        radial-gradient(ellipse at 15% 10%, #29205a 0%, transparent 38%),
+        radial-gradient(ellipse at 90% 80%, #102b49 0%, transparent 35%),
+        var(--bg);
+    overflow-x: hidden;
+    animation: pageReveal 0.8s ease both;
 }
 
 h1 {
-    font-size: 2rem;
-    font-weight: 600;
-    margin-bottom: 25px;
-    background: linear-gradient(to right, #60a5fa, #a78bfa);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    font-weight: 800;
+    letter-spacing: -2px;
     text-align: center;
+    margin: 30px 0;
+    background: linear-gradient(110deg, #fff 15%, #b9a7ff 50%, #ff9cde 85%);
+    background-size: 200% auto;
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+    animation: titleGlow 5s ease infinite;
+    filter: drop-shadow(0 0 24px rgba(155, 135, 255, 0.18));
 }
 
+/* Input panel */
+
 form {
+    width: min(100%, 620px);
     display: flex;
     gap: 12px;
-    margin-bottom: 25px;
+    padding: 10px;
+    margin-bottom: 28px;
+    border: 1px solid rgba(175, 155, 255, 0.25);
+    border-radius: 22px;
+    background: rgba(19, 23, 43, 0.85);
+    backdrop-filter: blur(20px);
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.24),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    transition: border-color 0.35s, box-shadow 0.35s, transform 0.35s;
+}
+
+form:focus-within {
+    border-color: rgba(155, 135, 255, 0.85);
+    box-shadow:
+        0 0 0 4px rgba(155, 135, 255, 0.08),
+        0 0 35px rgba(124, 58, 237, 0.16);
+    transform: translateY(-2px);
 }
 
 #todo-inp {
+    min-width: 0;
     flex: 1;
-    background: rgba(15, 23, 42, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 14px 20px;
-    border-radius: 14px;
-    color: #fff;
-    font-size: 1rem;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-#todo-inp:focus {
-    outline: none;
-    border-color: #6366f1;
-    box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
-    background: rgba(15, 23, 42, 0.8);
-}
-
-.add-btn {
-    background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+    padding: 16px 18px;
+    color: var(--text);
+    background: transparent;
     border: none;
-    color: white;
-    width: 52px;
-    height: 52px;
-    border-radius: 14px;
-    font-size: 1.5rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    outline: none;
+    font-size: 1rem;
+    caret-color: var(--purple);
+}
+
+#todo-inp::placeholder {
+    color: #858ba7;
+}
+
+/* Task list appears UNDER the input */
+
+#show-todo {
+    width: min(100%, 620px);
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+    list-style: none;
+    perspective: 1000px;
+}
+
+#show-todo li {
+    position: relative;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-width: 0;
+    padding: 19px 20px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 19px;
+    background: linear-gradient(120deg, rgba(29, 35, 62, 0.92), rgba(17, 22, 42, 0.92));
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    transform-origin: center;
+    animation: taskEnter 0.65s cubic-bezier(.2, .8, .2, 1) both;
+    animation-delay: calc(var(--item-index, 0) * 75ms);
+    transition:
+        border-color 0.3s,
+        background 0.3s,
+        box-shadow 0.3s,
+        transform 0.3s,
+        opacity 0.4s;
+}
+
+#show-todo li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 15%;
+    bottom: 15%;
+    width: 3px;
+    border-radius: 5px;
+    background: linear-gradient(180deg, var(--purple), var(--pink));
+    box-shadow: 0 0 14px rgba(155, 135, 255, 0.55);
+    transition: top 0.3s, bottom 0.3s;
+}
+
+#show-todo li:hover {
+    transform: translateY(-3px);
+    border-color: rgba(155, 135, 255, 0.4);
+    box-shadow: 0 14px 35px rgba(0, 0, 0, 0.24), 0 0 22px rgba(124, 58, 237, 0.08);
+}
+
+.todo-text-flow {
+    flex: 1;
+    min-width: 0;
+    color: #e9e9fb;
+    font-size: 0.97rem;
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+}
+
+.vacuum-letter {
+    display: inline-block;
+    animation: letterAppear 0.4s ease both;
+    animation-delay: calc(var(--char-index, 0) * 12ms);
+}
+
+
+/* Animated delete / dustbin button */
+
+.cyber-trash-btn {
+    position: relative;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
+    gap: 9px;
+    min-width: 104px;
+    padding: 11px 15px;
+    border: 1px solid rgba(255, 97, 120, 0.3);
+    border-radius: 13px;
+    color: #ff8b9b;
+    background: rgba(255, 97, 120, 0.07);
+    cursor: pointer;
+    overflow: hidden;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.cyber-trash-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, transparent, rgba(255,255,255,.12), transparent);
+    transform: translateX(-120%);
+    transition: transform 0.55s ease;
+}
+
+.cyber-trash-btn:hover::before {
+    transform: translateX(120%);
+}
+
+.cyber-trash-btn:hover {
+    color: #fff;
+    background: rgba(255, 75, 104, 0.2);
+    border-color: rgba(255, 97, 120, 0.75);
+    box-shadow: 0 0 22px rgba(255, 75, 104, 0.15);
+    transform: translateY(-2px);
+}
+
+.cyber-trash-btn:active {
+    transform: scale(0.94);
+}
+
+.trash-bin {
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    width: 17px;
+    height: 19px;
+}
+
+.trash-lid {
+    position: absolute;
+    z-index: 2;
+    top: 1px;
+    width: 17px;
+    height: 3px;
+    border-radius: 3px;
+    background: currentColor;
+    transform-origin: 2px 2px;
+    transition: transform 0.28s cubic-bezier(.2, .8, .2, 1);
+}
+
+.trash-lid::before {
+    content: "";
+    position: absolute;
+    width: 7px;
+    height: 2px;
+    top: -3px;
+    left: 5px;
+    border-radius: 2px;
+    background: currentColor;
+}
+
+.trash-box {
+    position: relative;
+    width: 13px;
+    height: 13px;
+    border: 2px solid currentColor;
+    border-top: none;
+    border-radius: 0 0 3px 3px;
+    overflow: hidden;
+    transition: height 0.25s;
+}
+
+.trash-box::before,
+.trash-box::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    bottom: 2px;
+    width: 2px;
+    border-radius: 2px;
+    background: currentColor;
+    opacity: 0.7;
+}
+
+.trash-box::before {
+    left: 3px;
+}
+
+.trash-box::after {
+    right: 3px;
+}
+
+/* Open the lid on hover and during deletion */
+
+.cyber-trash-btn:hover .trash-lid,
+.cyber-trash-btn.lid-ripped-open .trash-lid {
+    transform: rotate(-48deg) translate(-2px, -2px);
+}
+
+.cyber-trash-btn.lid-ripped-open {
+    color: white;
+    background: #ef4765;
+    border-color: #ff8498;
+    box-shadow: 0 0 28px rgba(255, 71, 101, 0.38);
+}
+
+/* Task text moves towards the bin */
+
+#show-todo li.active-vacuum-vortex .todo-text-flow {
+    transform: translateX(75px) scale(0.2);
+    opacity: 0;
+    filter: blur(5px);
+    transition: transform 0.65s cubic-bezier(.4, 0, .8, .2), opacity 0.5s, filter 0.5s;
+}
+
+#show-todo li.active-vacuum-vortex .vacuum-letter {
+    animation: letterSuck 0.65s ease-in both;
+    animation-delay: calc(var(--char-index, 0) * 8ms);
+}
+
+#show-todo li.dissolve-row-layout {
+    opacity: 0;
+    transform: translateX(35px) scale(0.65) rotateX(-15deg);
+    max-height: 0;
+    min-height: 0;
+    margin-top: -13px;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-width: 0;
+    pointer-events: none;
+}
+
+/* Loading animation */
+
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    padding: 35px 12px;
+    color: var(--muted);
+    font-size: 0.88rem;
+    animation: pageReveal 0.4s ease both;
+}
+
+.premium-loader {
+    width: 38px;
+    height: 38px;
+    border: 3px solid rgba(155, 135, 255, 0.14);
+    border-top-color: var(--purple);
+    border-right-color: var(--pink);
+    border-radius: 50%;
+    animation: loaderSpin 0.8s linear infinite;
+    box-shadow: 0 0 22px rgba(155, 135, 255, 0.14);
+}
+/* Premium Add Button */
+
+.add-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-shrink: 0;
+    padding: 0 17px;
+    min-height: 42px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 12px;
+    color: #fff;
+    background: linear-gradient(135deg, #8b5cf6, #6366f1 55%, #4f46e5);
+    box-shadow: 0 5px 18px rgba(99, 102, 241, 0.25);
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
 }
 
 .add-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+    filter: brightness(1.13);
+    box-shadow: 0 9px 25px rgba(124, 92, 246, 0.42);
 }
 
-/* Tasks Items Styling */
-#show-todo {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    perspective: 800px;
+.add-btn:active {
+    transform: scale(0.95);
 }
 
-li {
-    background: rgba(51, 65, 85, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 14px 18px;
-    border-radius: 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    transform-origin: right center;
+.add-btn:focus-visible {
+    outline: 2px solid #c4b5fd;
+    outline-offset: 3px;
 }
 
-.todo-text {
-    font-size: 1rem;
-    color: #e2e8f0;
-    max-width: 65%;
-    word-break: break-word;
-    transition: all 0.4s ease;
-}
-
-/* Premium Trash/Delete Button Logic */
-.delete-btn {
-    background: rgba(239, 68, 68, 0.1);
-    border: 1px solid rgba(239, 68, 68, 0.2);
-    color: #f87171;
-    padding: 10px 16px;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-    width: 95px; /* Initial Fixed Width */
-}
-
-.delete-btn:hover {
-    background: rgba(239, 68, 68, 0.2);
-    border-color: rgba(239, 68, 68, 0.4);
-    transform: translateY(-1px);
-}
-
-/* Custom CSS Trash Icon drawing */
-.trash-bin {
-    width: 14px;
-    height: 16px;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.trash-lid {
-    width: 14px;
-    height: 3px;
-    background-color: currentColor;
-    border-radius: 2px;
-    position: relative;
+.add-icon {
+    font-size: 1.4rem;
+    line-height: 1;
+    font-weight: 400;
     transition: transform 0.3s ease;
-    transform-origin: left center;
 }
 
-.trash-lid::before {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: 4px;
-    width: 6px;
-    height: 2px;
-    background-color: currentColor;
-    border-radius: 1px;
+.add-btn:hover .add-icon {
+    transform: rotate(90deg);
 }
 
-.trash-box {
-    width: 12px;
-    height: 12px;
-    margin: 0 auto;
-    background-color: transparent;
-    border: 2px solid currentColor;
-    border-top: none;
-    border-radius: 0 0 2px 2px;
-    position: relative;
+.add-btn:disabled {
+    opacity: 0.6;
+    cursor: wait;
+    transform: none;
 }
 
-/* Step 1 Animation Trigger: Button Widen & Lid Opens */
-.delete-btn.deleting {
-    width: 120px; /* Width increases */
-    background: #ef4444 !important;
-    color: #fff !important;
-    border-color: #ef4444 !important;
+@media (max-width: 420px) {
+    .add-btn {
+        padding: 0 12px;
+        gap: 5px;
+        font-size: 0.8rem;
+    }
 }
 
-.delete-btn.deleting .trash-lid {
-    transform: rotate(-50deg) translateY(-2px); /* Lid Opens Up */
+/* Motion */
+
+@keyframes pageReveal {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-/* Step 2 Animation Trigger: Text shrinks & drops inside button container direction */
-li.fall-in .todo-text {
-    transform: scale(0.1) translate(300px, 0);
-    opacity: 0;
+@keyframes titleGlow {
+    0%, 100% { background-position: 0% center; }
+    50% { background-position: 100% center; }
 }
 
-/* Final Lid Snap Close and item vanishing */
-li.fall-in {
-    opacity: 0.3;
-    transform: scaleY(0);
-    padding: 0;
-    margin: -7px 0;
-    border: none;
+@keyframes taskEnter {
+    from { opacity: 0; transform: translateY(22px) scale(0.97); filter: blur(4px); }
+    to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
 }
 
-li.fall-in .delete-btn .trash-lid {
-    transform: rotate(0deg); /* Lid closes right back up tight */
-    transition: transform 0.15s ease-in;
+@keyframes letterAppear {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-li.fall-in .delete-btn {
-    width: 95px; /* Returns back to normal scale */
-    transition: width 0.2s ease-in;
+@keyframes letterSuck {
+    to { opacity: 0; transform: translate(60px, -12px) scale(0.1) rotate(12deg); filter: blur(4px); }
 }
 
-/* Premium Spinner Elements for data loading state */
-.loading-container {
-    display: flex;
-    justify-content: center;
-    padding: 20px 0;
+@keyframes loaderSpin {
+    to { transform: rotate(360deg); }
 }
 
-.spinner {
-    animation: rotate 2s linear infinite;
-    width: 30px;
-    height: 30px;
+/* Small screens */
+
+@media (max-width: 520px) {
+    body {
+        padding: 26px 13px;
+    }
+
+    h1 {
+        margin: 24px 0;
+        letter-spacing: -1.3px;
+    }
+
+    form {
+        gap: 4px;
+        padding: 7px;
+        border-radius: 17px;
+        margin-bottom: 22px;
+    }
+
+    #todo-inp {
+        padding: 14px 12px;
+        font-size: 0.94rem;
+    }
+
+    #show-todo {
+        gap: 10px;
+    }
+
+    #show-todo li {
+        gap: 10px;
+        padding: 14px 12px;
+        border-radius: 15px;
+    }
+
+    .todo-text-flow {
+        font-size: 0.9rem;
+    }
+
+    .cyber-trash-btn {
+        min-width: auto;
+        padding: 10px;
+        gap: 6px;
+        font-size: 0.8rem;
+    }
 }
 
-.spinner .path {
-    stroke: #6366f1;
-    stroke-linecap: round;
-    animation: dash 1.5s ease-in-out infinite;
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+/* Compact input and todo list */
+form {
+    max-width: 480px;
+    padding: 7px;
+    margin-bottom: 20px;
+    border-radius: 17px;
 }
 
-.empty-state {
-    text-align: center;
-    color: #64748b;
-    font-size: 0.95rem;
-    padding: 20px 0;
+#todo-inp {
+    padding: 10px 14px;
+    font-size: 0.92rem;
 }
 
-@keyframes rotate {
-    100% { transform: rotate(360deg); }
+#show-todo {
+    max-width: 480px;
+    gap: 10px;
 }
 
-@keyframes dash {
-    0% { stroke-dasharray: 1, 150; stroke-dashoffset: 0; }
-    50% { stroke-dasharray: 90, 150; stroke-dashoffset: -35; }
-    100% { stroke-dasharray: 90, 150; stroke-dashoffset: -124; }
+#show-todo li {
+    min-height: 58px;
+    padding: 12px 15px;
+    border-radius: 15px;
+}
+
+.todo-text-flow {
+    font-size: 0.9rem;
+}
+
+.cyber-trash-btn {
+    min-height: 36px;
+    padding: 8px 11px;
+}
+
+@media (max-width: 520px) {
+    form,
+    #show-todo {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    #todo-inp {
+        padding: 10px;
+    }
+
+    #show-todo li {
+        min-height: 52px;
+        padding: 10px 12px;
+    }
 }
